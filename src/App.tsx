@@ -116,7 +116,7 @@ function App() {
                 </button>
             </form>
 
-            {seatDate.length && (
+            {seatDate.length > 0 && (
                 <section
                     className="grid gap-2 max-w-screen-lg"
                     style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10px, 100px))' }}
