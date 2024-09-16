@@ -3,10 +3,32 @@ import { useEffect, useState } from 'react'
 const TOTAL_TABLES = 20
 
 function App() {
+    const [seatDate, setSeatDate] = useState<number[]>([])
+
+    /* Mocking status of an API call */
+    const [seatDateFetchStatus, setSeatDateFetchStatus] = useState<'loading' | 'success' | 'failed' | 'uninitiated'>(
+        'uninitiated'
+    )
+
+    /* In a real life scenario this will be an API call to the server */
+    useEffect(() => {
+        setSeatDateFetchStatus('loading')
+        const id = setTimeout(() => setSeatDateFetchStatus('success'), 1000 * 2)
+        return () => {
+            clearTimeout(id)
+        }
+    }, [seatDate])
+
     const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(false)
+
     const [allotmentStatus, setAllotmentStatus] = useState<'loading' | 'success' | 'failed' | 'uninitiated'>(
         'uninitiated'
     )
+
+    const getSeatDate = () => {
+        const len = Math.floor(Math.random() * 10)
+        setSeatDate(Array(len).fill(len))
+    }
 
     const reserveSeat = (seatNum: number) => {
         setAllotmentConfirmationDialog(true)
@@ -19,7 +41,7 @@ function App() {
         if (allotmentStatus === 'loading') {
             id = setTimeout(() => {
                 setAllotmentStatus('success')
-            }, 1000 * 3)
+            }, 1000 * 1)
         }
         return () => {
             clearTimeout(id)
@@ -32,6 +54,9 @@ function App() {
                 className="grid"
                 onSubmit={(e) => {
                     e.preventDefault()
+                }}
+                onChange={() => {
+                    setSeatDate([])
                 }}
             >
                 <label>
@@ -80,34 +105,48 @@ function App() {
                 {/*     </select> */}
                 {/* </label> */}
 
-                <button type="submit">Continue</button>
+                <button
+                    type="submit"
+                    onClick={() => {
+                        getSeatDate()
+                    }}
+                    className="p-2 bg-gray-300 uppercase"
+                >
+                    Continue
+                </button>
             </form>
 
-            <section
-                className="grid gap-2 max-w-screen-lg"
-                style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10px, 100px))' }}
-            >
-                {Array(TOTAL_TABLES)
-                    .fill(' ')
-                    .map((_, tableNum) => {
-                        const seatAvailable = Boolean(Math.floor(Math.random() * 2))
-                        return (
-                            <button
-                                disabled={!seatAvailable}
-                                key={tableNum}
-                                className={[
-                                    seatAvailable ? 'bg-green-400 cursor-pointer' : 'bg-red-400 cursor-not-allowed',
-                                ].join(' ')}
-                                type="button"
-                                onClick={() => {
-                                    reserveSeat(tableNum)
-                                }}
-                            >
-                                {tableNum}
-                            </button>
-                        )
-                    })}
-            </section>
+            {seatDate.length && (
+                <section
+                    className="grid gap-2 max-w-screen-lg"
+                    style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10px, 100px))' }}
+                >
+                    {seatDateFetchStatus === 'loading' && <div className="text-nowrap">Loading seat status...</div>}
+                    {seatDateFetchStatus === 'success' &&
+                        Array(TOTAL_TABLES)
+                            .fill(' ')
+                            .map((_, tableNum) => {
+                                const seatAvailable = Boolean(Math.floor(Math.random() * 2))
+                                return (
+                                    <button
+                                        disabled={!seatAvailable}
+                                        key={tableNum}
+                                        className={[
+                                            seatAvailable
+                                                ? 'bg-green-400 cursor-pointer'
+                                                : 'bg-red-400 cursor-not-allowed',
+                                        ].join(' ')}
+                                        type="button"
+                                        onClick={() => {
+                                            reserveSeat(tableNum)
+                                        }}
+                                    >
+                                        {tableNum}
+                                    </button>
+                                )
+                            })}
+                </section>
+            )}
 
             {allotmentConfirmationDialog && (
                 <dialog
