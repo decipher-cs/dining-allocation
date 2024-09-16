@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 
+const TOTAL_TABLES = 20
+
 function App() {
-    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(true)
+    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(false)
     const [allotmentStatus, setAllotmentStatus] = useState<'loading' | 'success' | 'failed' | 'uninitiated'>(
         'uninitiated'
     )
@@ -11,6 +13,7 @@ function App() {
         setAllotmentStatus('loading')
     }
 
+    /* In a real life scenario this will be an API call to the server */
     useEffect(() => {
         let id = undefined
         if (allotmentStatus === 'loading') {
@@ -44,21 +47,38 @@ function App() {
                 </label>
 
                 <label>
-                    Duration <input type="range" />
+                    Duration (min) <input type="range" max={120} min={15} />
                 </label>
 
                 <label>
-                    Date and time <input type="datetime-local" />
+                    Date and time{' '}
+                    <input
+                        type="datetime-local"
+                        min={(() => {
+                            const date = new Date().toLocaleDateString('en-ca')
+                            const time = new Date().toLocaleTimeString('en-ca', { hour12: false })
+                            return date + 'T' + time
+                        })()}
+                        max={(() => {
+                            const date = new Date().toLocaleDateString('en-ca')
+                            const time = new Date(Date.now() + 1000 * 60 * 60 * 2).toLocaleTimeString('en-ca', {
+                                hour12: false,
+                            })
+                            return date + 'T' + time
+                        })()}
+                    />
                 </label>
 
-                <label htmlFor="available-table">
-                    Available Table
-                    <select name="available-table">
-                        {[1, 2, 3].map((value) => (
-                            <option key={value}>Table no. {value}</option>
-                        ))}
-                    </select>
-                </label>
+                {/* <label htmlFor="available-table"> */}
+                {/*     Available Table */}
+                {/*     <select name="available-table"> */}
+                {/*         {Array(TOTAL_TABLES) */}
+                {/*             .fill(null) */}
+                {/*             .map((_, value) => ( */}
+                {/*                 <option key={value}>Table no. {value + 1}</option> */}
+                {/*             ))} */}
+                {/*     </select> */}
+                {/* </label> */}
 
                 <button type="submit">Continue</button>
             </form>
@@ -67,7 +87,7 @@ function App() {
                 className="grid gap-2 max-w-screen-lg"
                 style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10px, 100px))' }}
             >
-                {Array(20)
+                {Array(TOTAL_TABLES)
                     .fill(' ')
                     .map((_, tableNum) => {
                         const seatAvailable = Boolean(Math.floor(Math.random() * 2))
