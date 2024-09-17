@@ -145,7 +145,8 @@ function App() {
                     {seatDateFetchStatus === "success" && (
                         <>
                             <div
-                                className="border-primary/40 grid max-w-screen-md justify-center gap-5 rounded-lg border bg-neutral-800/10 p-10 backdrop-blur-sm"
+                                className="border-primary/40 grid max-w-screen-md justify-center gap-5 rounded-lg border bg-neutral-800/10 px-3 py-10
+                                    backdrop-blur-sm md:px-10"
                                 style={{
                                     gridTemplateColumns: "repeat(auto-fit, minmax(10px, 100px))",
                                 }}
@@ -181,13 +182,13 @@ function App() {
             {allotmentConfirmationDialog && (
                 <dialog
                     open={allotmentConfirmationDialog}
-                    className="absolute inset-0 grid h-svh w-full place-content-center"
+                    className="absolute inset-0 grid size-full place-content-center p-4"
                     style={{
                         backdropFilter: "blur(4px) saturate(80%)",
                         backgroundColor: "rgba(0, 0, 0, 0.1)",
                     }}
                 >
-                    <div className="rounded-xl border border-gray-100 bg-white p-7">
+                    <div className="rounded-xl border border-gray-100 bg-white px-5 py-8">
                         {allotmentStatus === "loading" && (
                             <div className="w-fit animate-spin bg-white p-4">
                                 <svg
