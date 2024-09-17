@@ -55,7 +55,7 @@ function App() {
 
     const labelClassName = "block text-md font-bold text-gray-200"
     const inputClassName =
-        "mt-1 w-full rounded-lg border-gray-700 bg-gray-900 px-2 py-3 text-white shadow-sm sm:text-sm"
+        "mt-1 w-full rounded-lg border-gray-700 bg-gray-900 px-2 py-3 text-white shadow-sm sm:text-sm outline-primary focus:outline"
 
     return (
         <main className="relative flex min-h-svh w-full flex-col justify-evenly bg-gray-950 p-2 text-neutral-100 max-lg:items-center lg:flex-row">
@@ -84,16 +84,16 @@ function App() {
                     <input
                         className={inputClassName}
                         type="time"
-                        min={(() => {
-                            const time = new Date().toLocaleTimeString("en-ca", { hour12: false })
-                            return time
-                        })()}
-                        max={(() => {
-                            const time = new Date(Date.now() + 1000 * 60 * 60 * 2).toLocaleTimeString("en-ca", {
-                                hour12: false,
-                            })
-                            return time
-                        })()}
+                        // min={(() => {
+                        //     const time = new Date().toLocaleTimeString("en-ca", { hour12: false })
+                        //     return time
+                        // })()}
+                        // max={(() => {
+                        //     const time = new Date(Date.now() + 1000 * 60 * 60 * 2).toLocaleTimeString("en-ca", {
+                        //         hour12: false,
+                        //     })
+                        //     return time
+                        // })()}
                     />
                 </label>
 
@@ -111,7 +111,7 @@ function App() {
 
                 <Button
                     type="submit"
-                    className=""
+                    className="font-bold uppercase"
                     onClick={() => {
                         getSeatDate()
                     }}
@@ -121,13 +121,12 @@ function App() {
             </form>
 
             {seatDate.length > 0 && (
-                <section className="grid place-items-center py-3">
+                <section className="grid place-items-center items-center py-3">
                     {seatDateFetchStatus === "loading" && <div className="text-nowrap">Loading seat status...</div>}
                     {seatDateFetchStatus === "success" && (
                         <>
-                            Select a table
                             <div
-                                className="grid w-full max-w-screen-md gap-2"
+                                className="border-primary/40 grid max-w-screen-md gap-5 rounded-lg border bg-neutral-800/10 p-10 backdrop-blur-sm"
                                 style={{
                                     gridTemplateColumns: "repeat(auto-fit, minmax(10px, 100px))",
                                 }}
@@ -137,21 +136,21 @@ function App() {
                                     .map((_, tableNum) => {
                                         const seatAvailable = Boolean(Math.floor(Math.random() * 2))
                                         return (
-                                            <button
+                                            <Button
                                                 disabled={!seatAvailable}
                                                 key={tableNum}
-                                                className={[
-                                                    seatAvailable
-                                                        ? "cursor-pointer bg-green-400"
-                                                        : "cursor-not-allowed bg-red-400",
-                                                ].join("")}
+                                                className={` ${
+                                                seatAvailable
+                                                        ? "cursor-pointer"
+                                                        : "bg-primary/30 cursor-not-allowed border-gray-700/10"
+                                                } rounded-md px-5 py-2`}
                                                 type="button"
                                                 onClick={() => {
                                                     reserveSeat(tableNum)
                                                 }}
                                             >
-                                                {tableNum}
-                                            </button>
+                                                {tableNum + 1}
+                                            </Button>
                                         )
                                     })}
                             </div>

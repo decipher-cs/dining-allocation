@@ -10,8 +10,8 @@ interface BackgroundGridProps {
 
 const BackgroundGrid = ({
     color = "#fb3a5d",
-    cellSize = "25px",
-    strokeWidth = "3px",
+    cellSize = "40px",
+    strokeWidth = "2px",
     className,
     fade = true,
     ...props
@@ -31,8 +31,8 @@ const BackgroundGrid = ({
                 backgroundImage: `url("${svgDataUrl}")`,
                 backgroundRepeat: "repeat",
                 backgroundSize: cellSize,
-                maskImage: fade ? `radial-gradient(ellipse at top, white, transparent 70%)` : undefined,
-                WebkitMaskImage: fade ? `radial-gradient(ellipse at top, white, transparent 70%)` : undefined,
+                maskImage: fade ? `radial-gradient(ellipse at top, white, transparent 90%)` : undefined,
+                WebkitMaskImage: fade ? `radial-gradient(ellipse at top, white, transparent 90%)` : undefined,
             }}
             {...props}
         ></div>

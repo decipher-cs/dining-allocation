@@ -10,8 +10,8 @@ export default function Button({ variant = "primary", ...props }: ButtonProps) {
     return (
         <button
             className={twMerge(
-                `border-primary bg-primary hover:text-primary active:text-primary inline-block rounded-lg border text-sm font-medium
-                text-white hover:bg-transparent focus:outline-none focus:ring`,
+                `border-primary bg-primary [&:not(:disabled)]:hover:text-primary active:text-primary inline-block rounded-lg border
+                text-sm font-medium text-white focus:outline-none focus:ring [&:not(:disabled)]:hover:bg-transparent`,
                 className
             )}
             {...rest}
