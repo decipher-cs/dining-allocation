@@ -1,29 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
+import BackgroundGrid from "./components/BackgroundGrid"
+import Button from "./components/Button"
 
 const TOTAL_TABLES = 20
+
+const tw = (strings: TemplateStringsArray, ...values: TemplateStringsArray[]) => String.raw({ raw: strings }, ...values)
 
 function App() {
     const [seatDate, setSeatDate] = useState<number[]>([])
 
     /* Mocking status of an API call */
-    const [seatDateFetchStatus, setSeatDateFetchStatus] = useState<'loading' | 'success' | 'failed' | 'uninitiated'>(
-        'uninitiated'
+    const [seatDateFetchStatus, setSeatDateFetchStatus] = useState<"loading" | "success" | "failed" | "uninitiated">(
+        "uninitiated"
     )
 
     /* In a real life scenario this will be an API call to the server */
     useEffect(() => {
-        setSeatDateFetchStatus('loading')
-        const id = setTimeout(() => setSeatDateFetchStatus('success'), 1000 * 2)
+        setSeatDateFetchStatus("loading")
+        const id = setTimeout(() => setSeatDateFetchStatus("success"), import.meta.env.PROD ? 1000 * 1 : 1)
         return () => {
             clearTimeout(id)
         }
     }, [seatDate])
 
-    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(false)
+    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(true)
 
-    const [allotmentStatus, setAllotmentStatus] = useState<'loading' | 'success' | 'failed' | 'uninitiated'>(
-        'uninitiated'
-    )
+    const [allotmentStatus, setAllotmentStatus] = useState<"loading" | "success" | "failed" | "uninitiated">("success")
 
     const getSeatDate = () => {
         const len = Math.floor(Math.random() * 10)
@@ -32,144 +34,152 @@ function App() {
 
     const reserveSeat = (seatNum: number) => {
         setAllotmentConfirmationDialog(true)
-        setAllotmentStatus('loading')
+        setAllotmentStatus("loading")
     }
 
     /* In a real life scenario this will be an API call to the server */
     useEffect(() => {
         let id = undefined
-        if (allotmentStatus === 'loading') {
-            id = setTimeout(() => {
-                setAllotmentStatus('success')
-            }, 1000 * 1)
+        if (allotmentStatus === "loading") {
+            id = setTimeout(
+                () => {
+                    setAllotmentStatus("success")
+                },
+                import.meta.env.PROD ? 1000 * 1 : 1
+            )
         }
         return () => {
             clearTimeout(id)
         }
     }, [allotmentStatus])
 
+    const labelClassName = "block text-md font-bold text-gray-200"
+    const inputClassName =
+        "mt-1 w-full rounded-lg border-gray-700 bg-gray-900 px-2 py-3 text-white shadow-sm sm:text-sm"
+
     return (
-        <main>
+        <main className="relative flex min-h-svh w-full flex-col justify-evenly bg-gray-950 p-2 text-neutral-100 max-lg:items-center lg:flex-row">
+            <BackgroundGrid />
+
             <form
-                className="grid"
+                className="relative grid w-1/3 gap-4 rounded-xl border border-neutral-600 bg-neutral-500/20 p-3 backdrop-blur-sm"
                 onSubmit={(e) => {
                     e.preventDefault()
                 }}
-                onChange={() => {
-                    setSeatDate([])
-                }}
             >
-                <label>
-                    Name <input type="text" />
+                <label className={labelClassName}>
+                    Name <input className={inputClassName} type="text" />
                 </label>
 
-                <label>
-                    Phone no. <input type="tel" />
+                <label className={labelClassName}>
+                    Phone no. <input className={inputClassName} type="tel" />
                 </label>
 
-                <label>
-                    Email <input type="email" />
+                <label className={labelClassName}>
+                    Email <input className={inputClassName} type="email" />
                 </label>
 
-                <label>
-                    Duration (min) <input type="range" max={120} min={15} />
-                </label>
-
-                <label>
-                    Date and time{' '}
+                <label className={labelClassName}>
+                    Time
                     <input
-                        type="datetime-local"
+                        className={inputClassName}
+                        type="time"
                         min={(() => {
-                            const date = new Date().toLocaleDateString('en-ca')
-                            const time = new Date().toLocaleTimeString('en-ca', { hour12: false })
-                            return date + 'T' + time
+                            const time = new Date().toLocaleTimeString("en-ca", { hour12: false })
+                            return time
                         })()}
                         max={(() => {
-                            const date = new Date().toLocaleDateString('en-ca')
-                            const time = new Date(Date.now() + 1000 * 60 * 60 * 2).toLocaleTimeString('en-ca', {
+                            const time = new Date(Date.now() + 1000 * 60 * 60 * 2).toLocaleTimeString("en-ca", {
                                 hour12: false,
                             })
-                            return date + 'T' + time
+                            return time
                         })()}
                     />
                 </label>
 
-                {/* <label htmlFor="available-table"> */}
-                {/*     Available Table */}
-                {/*     <select name="available-table"> */}
-                {/*         {Array(TOTAL_TABLES) */}
-                {/*             .fill(null) */}
-                {/*             .map((_, value) => ( */}
-                {/*                 <option key={value}>Table no. {value + 1}</option> */}
-                {/*             ))} */}
-                {/*     </select> */}
-                {/* </label> */}
+                <label htmlFor="duration" className={labelClassName}>
+                    Duration
+                    <select name="duration" className={inputClassName}>
+                        <option value="" disabled>
+                            Select Duration
+                        </option>
+                        <option value={15}>{15} min</option>
+                        <option value={30}>{30} min</option>
+                        <option value={45}>{45} min</option>
+                    </select>
+                </label>
 
-                <button
+                <Button
                     type="submit"
+                    className=""
                     onClick={() => {
                         getSeatDate()
                     }}
-                    className="p-2 bg-gray-300 uppercase"
                 >
                     Continue
-                </button>
+                </Button>
             </form>
 
             {seatDate.length > 0 && (
-                <section
-                    className="grid gap-2 max-w-screen-lg"
-                    style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10px, 100px))' }}
-                >
-                    {seatDateFetchStatus === 'loading' && <div className="text-nowrap">Loading seat status...</div>}
-                    {seatDateFetchStatus === 'success' &&
-                        Array(TOTAL_TABLES)
-                            .fill(' ')
-                            .map((_, tableNum) => {
-                                const seatAvailable = Boolean(Math.floor(Math.random() * 2))
-                                return (
-                                    <button
-                                        disabled={!seatAvailable}
-                                        key={tableNum}
-                                        className={[
-                                            seatAvailable
-                                                ? 'bg-green-400 cursor-pointer'
-                                                : 'bg-red-400 cursor-not-allowed',
-                                        ].join(' ')}
-                                        type="button"
-                                        onClick={() => {
-                                            reserveSeat(tableNum)
-                                        }}
-                                    >
-                                        {tableNum}
-                                    </button>
-                                )
-                            })}
+                <section className="grid place-items-center py-3">
+                    {seatDateFetchStatus === "loading" && <div className="text-nowrap">Loading seat status...</div>}
+                    {seatDateFetchStatus === "success" && (
+                        <>
+                            Select a table
+                            <div
+                                className="grid w-full max-w-screen-md gap-2"
+                                style={{
+                                    gridTemplateColumns: "repeat(auto-fit, minmax(10px, 100px))",
+                                }}
+                            >
+                                {Array(TOTAL_TABLES)
+                                    .fill(" ")
+                                    .map((_, tableNum) => {
+                                        const seatAvailable = Boolean(Math.floor(Math.random() * 2))
+                                        return (
+                                            <button
+                                                disabled={!seatAvailable}
+                                                key={tableNum}
+                                                className={[
+                                                    seatAvailable
+                                                        ? "cursor-pointer bg-green-400"
+                                                        : "cursor-not-allowed bg-red-400",
+                                                ].join("")}
+                                                type="button"
+                                                onClick={() => {
+                                                    reserveSeat(tableNum)
+                                                }}
+                                            >
+                                                {tableNum}
+                                            </button>
+                                        )
+                                    })}
+                            </div>
+                        </>
+                    )}
                 </section>
             )}
 
             {allotmentConfirmationDialog && (
                 <dialog
                     open={allotmentConfirmationDialog}
-                    className="h-svh w-full absolute inset-0 grid place-content-center"
+                    className="absolute inset-0 grid h-svh w-full place-content-center"
                     style={{
-                        backdropFilter: 'blur(4px) saturate(80%)',
-                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                        backdropFilter: "blur(4px) saturate(80%)",
+                        backgroundColor: "rgba(0, 0, 0, 0.1)",
                     }}
                 >
-                    <button
-                        className="p-2 bg-black text-white"
-                        onClick={() => setAllotmentConfirmationDialog(false)}
-                        aria-label="close dialog"
-                    >
-                        Close X
-                    </button>
+                    <div className="min-w-1/3 rounded-xl border border-neutral-500 p-3">
+                        <Button onClick={() => setAllotmentConfirmationDialog(false)} aria-label="Dismiss dialog">
+                            Close X
+                        </Button>
 
-                    {allotmentStatus === 'loading' && <div className="bg-white w-fit p-4">Loading...</div>}
-                    {allotmentStatus === 'failed' && (
-                        <div className="bg-white w-fit p-4">Sorry try some other table</div>
-                    )}
-                    {allotmentStatus === 'success' && <div className="bg-white w-fit p-4">Successful ✅</div>}
+                        {allotmentStatus === "loading" && <div className="w-fit bg-white p-4">Loading...</div>}
+                        {allotmentStatus === "failed" && (
+                            <div className="w-fit bg-white p-4">Sorry try some other table</div>
+                        )}
+                        {allotmentStatus === "success" && <div className="w-fit bg-white p-4">Successful ✅</div>}
+                    </div>
                 </dialog>
             )}
         </main>
