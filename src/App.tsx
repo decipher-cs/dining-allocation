@@ -28,7 +28,7 @@ function App() {
     const [allotmentStatus, setAllotmentStatus] = useState<"loading" | "success" | "failed" | "uninitiated">("success")
 
     const getSeatDate = () => {
-        const len = Math.floor(Math.random() * 10)
+        const len = Math.floor(Math.random() * 10) + 1
         setSeatDate(Array(len).fill(len))
     }
 
