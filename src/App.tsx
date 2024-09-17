@@ -188,9 +188,7 @@ function App() {
                                 <span className="sr-only">Loading. Please Wait</span>
                             </div>
                         )}
-                        {allotmentStatus === "failed" && (
-                            <div className="w-fit bg-white p-4">Sorry try some other table</div>
-                        )}
+                        {allotmentStatus === "failed" && <div className="w-fit bg-white p-4">Sorry try again</div>}
                         {allotmentStatus === "success" && (
                             <div className="flex items-start gap-5">
                                 <div className="flex-1 space-y-3">
@@ -216,17 +214,12 @@ function App() {
                                         Your seat has been alloted. Allotment no.
                                         {Math.floor(Math.random() * 999)}
                                     </p>
-
-                                    <Button
-                                        onClick={() => setAllotmentConfirmationDialog(false)}
-                                        aria-label="Dismiss dialog"
-                                        className="mt-4 px-4 py-2 transition"
-                                    >
-                                        Close X
-                                    </Button>
                                 </div>
 
-                                <Button className="border-none bg-transparent px-3 text-gray-500 transition hover:text-gray-600">
+                                <Button
+                                    className="border-none bg-transparent px-3 text-gray-500 transition hover:text-gray-600"
+                                    onClick={() => setAllotmentConfirmationDialog(false)}
+                                >
                                     <span className="sr-only">close dialog</span>
 
                                     <svg
