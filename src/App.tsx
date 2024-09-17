@@ -23,7 +23,7 @@ function App() {
         }
     }, [seatDate])
 
-    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(true)
+    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(false)
 
     const [allotmentStatus, setAllotmentStatus] = useState<"loading" | "success" | "failed" | "uninitiated">("success")
 
