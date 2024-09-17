@@ -55,14 +55,15 @@ function App() {
 
     const labelClassName = "block text-md font-bold text-gray-200"
     const inputClassName =
-        "mt-1 w-full rounded-lg border-gray-700 bg-gray-900 px-2 py-3 text-white shadow-sm sm:text-sm outline-primary focus:outline"
+        "mt-1 w-full rounded-lg border-gray-700 bg-neutral-900 px-2 py-3 text-white shadow-sm sm:text-sm outline-primary focus:outline"
 
     return (
-        <main className="relative flex min-h-svh w-full flex-col justify-evenly bg-gray-950 p-2 text-neutral-100 max-lg:items-center lg:flex-row">
+        <main className="relative block min-h-svh w-full bg-gray-950 p-2 text-neutral-100 lg:flex">
             <BackgroundGrid />
 
             <form
-                className="relative grid w-1/3 gap-4 rounded-xl border border-neutral-600 bg-neutral-500/20 p-3 backdrop-blur-sm"
+                className="relative mx-auto grid min-w-[30%] max-w-lg basis-1/2 gap-4 rounded-xl border border-neutral-600 bg-neutral-500/20 p-3
+                    backdrop-blur-sm"
                 onSubmit={(e) => {
                     e.preventDefault()
                 }}
@@ -111,7 +112,7 @@ function App() {
 
                 <Button
                     type="submit"
-                    className="font-bold uppercase"
+                    className="px-4 py-2 font-bold uppercase"
                     onClick={() => {
                         getSeatDate()
                     }}
@@ -121,12 +122,30 @@ function App() {
             </form>
 
             {seatDate.length > 0 && (
-                <section className="grid place-items-center items-center py-3">
-                    {seatDateFetchStatus === "loading" && <div className="text-nowrap">Loading seat status...</div>}
+                <section className="grid basis-1/2 place-items-center items-center py-3">
+                    {seatDateFetchStatus === "loading" && (
+                        <div className="animate-spin text-nowrap">
+                            <span className="sr-only">Loading</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                className="size-6"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                />
+                            </svg>
+                        </div>
+                    )}
                     {seatDateFetchStatus === "success" && (
                         <>
                             <div
-                                className="border-primary/40 grid max-w-screen-md gap-5 rounded-lg border bg-neutral-800/10 p-10 backdrop-blur-sm"
+                                className="border-primary/40 grid max-w-screen-md justify-center gap-5 rounded-lg border bg-neutral-800/10 p-10 backdrop-blur-sm"
                                 style={{
                                     gridTemplateColumns: "repeat(auto-fit, minmax(10px, 100px))",
                                 }}
@@ -142,8 +161,8 @@ function App() {
                                                 className={` ${
                                                 seatAvailable
                                                         ? "cursor-pointer"
-                                                        : "bg-primary/30 cursor-not-allowed border-gray-700/10"
-                                                } rounded-md px-5 py-2`}
+                                                        : "cursor-not-allowed border-gray-700/10 bg-neutral-500/30"
+                                                } rounded-md px-10 py-4`}
                                                 type="button"
                                                 onClick={() => {
                                                     reserveSeat(tableNum)
