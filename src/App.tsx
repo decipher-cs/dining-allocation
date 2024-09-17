@@ -23,7 +23,7 @@ function App() {
         }
     }, [seatDate])
 
-    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(false)
+    const [allotmentConfirmationDialog, setAllotmentConfirmationDialog] = useState(true)
 
     const [allotmentStatus, setAllotmentStatus] = useState<"loading" | "success" | "failed" | "uninitiated">("success")
 
@@ -168,16 +168,62 @@ function App() {
                         backgroundColor: "rgba(0, 0, 0, 0.1)",
                     }}
                 >
-                    <div className="min-w-1/3 rounded-xl border border-neutral-500 p-3">
-                        <Button onClick={() => setAllotmentConfirmationDialog(false)} aria-label="Dismiss dialog">
-                            Close X
-                        </Button>
-
+                    <div className="rounded-xl border border-gray-100 bg-white p-4">
                         {allotmentStatus === "loading" && <div className="w-fit bg-white p-4">Loading...</div>}
                         {allotmentStatus === "failed" && (
                             <div className="w-fit bg-white p-4">Sorry try some other table</div>
                         )}
-                        {allotmentStatus === "success" && <div className="w-fit bg-white p-4">Successful ✅</div>}
+                        {allotmentStatus === "success" && (
+                            <div className="flex items-start gap-4">
+                                <div className="flex-1">
+                                    <strong className="flex gap-2 font-medium text-gray-900">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="size-6 text-green-600"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                            />
+                                        </svg>
+                                        Successful
+                                    </strong>
+
+                                    <p className="mt-1 text-sm text-gray-700">
+                                        Your seat has been alloted. Allotment no.
+                                        {Math.floor(Math.random() * 999)}
+                                    </p>
+
+                                    <Button
+                                        onClick={() => setAllotmentConfirmationDialog(false)}
+                                        aria-label="Dismiss dialog"
+                                        className="mt-4 px-4 py-2 transition"
+                                    >
+                                        Close X
+                                    </Button>
+                                </div>
+
+                                <Button className="bg-transparen border-none px-3 text-gray-500 transition hover:text-gray-600">
+                                    <span className="sr-only">close dialog</span>
+
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </dialog>
             )}
