@@ -28,13 +28,19 @@ function App() {
     const [allotmentStatus, setAllotmentStatus] = useState<"loading" | "success" | "failed" | "uninitiated">("success")
 
     const getSeatDate = () => {
-        const len = Math.floor(Math.random() * 10) + 1
-        setSeatDate(Array(len).fill(len))
+        const arr = []
+        for (let i = 0; i < TOTAL_TABLES; i++) arr.push(Math.floor(Math.random() * 2))
+        setSeatDate(arr)
     }
 
     const reserveSeat = (seatNum: number) => {
         setAllotmentConfirmationDialog(true)
         setAllotmentStatus("loading")
+        setSeatDate((prev) => {
+            const newArr = prev.slice()
+            newArr.splice(seatNum, 1, 0)
+            return newArr
+        })
     }
 
     /* In a real life scenario this will be an API call to the server */
@@ -145,34 +151,32 @@ function App() {
                     {seatDateFetchStatus === "success" && (
                         <>
                             <div
-                                className="border-primary/40 grid max-w-screen-md justify-center gap-5 rounded-lg border bg-neutral-800/10 px-3 py-10
+                                className="grid max-w-screen-md justify-center gap-5 rounded-lg border border-primary/40 bg-neutral-800/10 px-3 py-10
                                     backdrop-blur-sm md:px-10"
                                 style={{
                                     gridTemplateColumns: "repeat(auto-fit, minmax(10px, 100px))",
                                 }}
                             >
-                                {Array(TOTAL_TABLES)
-                                    .fill(" ")
-                                    .map((_, tableNum) => {
-                                        const seatAvailable = Boolean(Math.floor(Math.random() * 2))
-                                        return (
-                                            <Button
-                                                disabled={!seatAvailable}
-                                                key={tableNum}
-                                                className={` ${
-                                                seatAvailable
-                                                        ? "cursor-pointer"
-                                                        : "cursor-not-allowed border-gray-700/10 bg-neutral-500/30"
-                                                } rounded-md px-10 py-4`}
-                                                type="button"
-                                                onClick={() => {
-                                                    reserveSeat(tableNum)
-                                                }}
-                                            >
-                                                {tableNum + 1}
-                                            </Button>
-                                        )
-                                    })}
+                                {seatDate.map((seatStatus, tableNum) => {
+                                    const seatAvailable = Boolean(seatStatus)
+                                    return (
+                                        <Button
+                                            disabled={!seatAvailable}
+                                            key={tableNum}
+                                            className={` ${
+                                            seatAvailable
+                                                    ? "cursor-pointer border-green-300 bg-green-500 active:text-green-500 [&:not(:disabled)]:hover:text-green-500"
+                                                    : "cursor-not-allowed"
+                                            } rounded-md px-10 py-4`}
+                                            type="button"
+                                            onClick={() => {
+                                                reserveSeat(tableNum)
+                                            }}
+                                        >
+                                            {tableNum + 1}
+                                        </Button>
+                                    )
+                                })}
                             </div>
                         </>
                     )}
