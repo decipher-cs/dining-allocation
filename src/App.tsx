@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import BackgroundGrid from "./components/BackgroundGrid"
 import Button from "./components/Button"
 
@@ -15,7 +15,7 @@ function App() {
     )
 
     /* In a real life scenario this will be an API call to the server */
-    useEffect(() => {
+    useLayoutEffect(() => {
         setSeatDateFetchStatus("loading")
         const id = setTimeout(() => setSeatDateFetchStatus("success"), import.meta.env.PROD ? 1000 * 1 : 1)
         return () => {
@@ -185,6 +185,7 @@ function App() {
 
             {allotmentConfirmationDialog && (
                 <dialog
+                    role="alertdialog"
                     open={allotmentConfirmationDialog}
                     className="absolute inset-0 grid size-full place-content-center p-4"
                     style={{
@@ -241,8 +242,9 @@ function App() {
                                 </div>
 
                                 <Button
-                                    className="border-none bg-transparent px-3 text-gray-500 transition hover:text-gray-600"
+                                    className="border-none bg-transparent px-3 text-gray-500 hover:text-gray-600"
                                     onClick={() => setAllotmentConfirmationDialog(false)}
+                                    autoFocus
                                 >
                                     <span className="sr-only">close dialog</span>
 
